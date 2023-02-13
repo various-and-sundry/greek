@@ -33,13 +33,37 @@ answerButton[3] = document.getElementById("answerButton3");
 var currentlySelectedArticle;
 
 function nextQuestion() {
-	currentlySelectedArticle = getRandomArticle();
+	if(validArticlesAreAvailable()) {
+		currentlySelectedArticle = getRandomArticle();
 
-	setupAnswerButtons(currentlySelectedArticle);
+		setupAnswerButtons(currentlySelectedArticle);
 
-	document.getElementById("default").innerHTML = currentlySelectedArticle.case + " " +
-						       currentlySelectedArticle.gender + " " +
-						       currentlySelectedArticle.number + " Article";
+		document.getElementById("default").innerHTML = currentlySelectedArticle.case + " " +
+							       currentlySelectedArticle.gender + " " +
+							       currentlySelectedArticle.number + " Article";
+	}
+}
+
+// See if there is at least one case, number, and gender selected
+function validArticlesAreAvailable() {
+	// Return false if no case is selected
+	if(!(document.getElementById("Nominative").checked ||
+	     document.getElementById("Genitive").checked ||
+	     document.getElementById("Dative").checked ||
+	     document.getElementById("Accusative").checked)) {
+		alert("At least one case must be selected.");
+		return(false);
+	}
+
+	// Return false if no number is selected
+	if(!(document.getElementById("Singular").checked ||
+	     document.getElementById("Plural").checked)) {
+		alert("At least one number must be selected.");
+		return(false);
+	}
+
+	
+	return(true);
 }
 
 function getRandomArticle() {
@@ -68,26 +92,13 @@ function setupAnswerButtons(correctAnswer) {
 	answerButton[Math.floor(Math.random() * 3)].innerHTML = correctAnswer.word;
 }
 
-	// Return an array of four random article indices, which do not repeat or match the correct answer's index
+	// Return an array of four random article indices
 function getFourRandomIndices(correctAnswer) {
 	indices = {};
 
 	for(let i = 0; i < 4; i++) {
 		// Generate one random index
 		indices[i] = getRandomArticle().id;
-
-		// If the chosen index matches that of the correct answer, try again
-		if(indices[i] == correctAnswer.id) {
-			i--;
-
-		}
-
-		// If the chosen index has already been listed, try again
-		for(let j = 0; j < i; j++) {
-			if(articles[indices[j]].word == articles[indices[i]].word) {
-				i--;
-			}
-		}
 	}
 
 	return(indices);
@@ -105,7 +116,7 @@ function answerSelectionAction(answerNumber) {
 function isNotAllowableIndex(index) {
 	article = articles[index];
 
-	return(isWrongCase(article));
+	return(isWrongCase(article) || isWrongNumber(article));
 }
 
 // Return true if article is of a prohibited case
@@ -113,5 +124,9 @@ function isWrongCase(article) {
 	return(!document.getElementById(article.case).checked);
 }
 
+// Return true if article is of a prohibited number
+function isWrongNumber(article) {
+	return(!document.getElementById(article.number).checked);
+}
 
 window.onload = nextQuestion();
