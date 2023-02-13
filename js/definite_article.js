@@ -62,7 +62,14 @@ function validArticlesAreAvailable() {
 		return(false);
 	}
 
-	
+	// Return false if no gender is selected
+	if(!(document.getElementById("Masculine").checked ||
+	     document.getElementById("Feminine").checked ||
+	     document.getElementById("Neuter").checked)) {
+		alert("At least one gender must be selected.");
+		return(false);
+	}
+
 	return(true);
 }
 
@@ -116,7 +123,7 @@ function answerSelectionAction(answerNumber) {
 function isNotAllowableIndex(index) {
 	article = articles[index];
 
-	return(isWrongCase(article) || isWrongNumber(article));
+	return(isWrongCase(article) || isWrongNumber(article) || isWrongGender(article));
 }
 
 // Return true if article is of a prohibited case
@@ -127,6 +134,11 @@ function isWrongCase(article) {
 // Return true if article is of a prohibited number
 function isWrongNumber(article) {
 	return(!document.getElementById(article.number).checked);
+}
+
+// Return true if article is of a prohibited gender
+function isWrongGender(article) {
+	return(!document.getElementById(article.gender).checked);
 }
 
 window.onload = nextQuestion();
