@@ -1,26 +1,26 @@
 var articles = {};
-articles[0]  = { word : "ὁ",      case: "Nomnative",	gender : "Masculine",	number : "Singular", id : "0" };
-articles[1]  = { word : "τοῦ",  case: "Genative",	gender : "Masculine",	number : "Singular", id : "1" };
+articles[0]  = { word : "ὁ",      case: "Nominative",	gender : "Masculine",	number : "Singular", id : "0" };
+articles[1]  = { word : "τοῦ",  case: "Genitive",	gender : "Masculine",	number : "Singular", id : "1" };
 articles[2]  = { word : "τῷ",    case: "Dative",	gender : "Masculine",	number : "Singular", id : "2" };
 articles[3]  = { word : "τόν",  case: "Accusative",	gender : "Masculine",	number : "Singular", id : "3" };
-articles[4]  = { word : "ἡ",      case: "Nomnative",	gender : "Feminine",	number : "Singular", id : "4" };
-articles[5]  = { word : "τῆς",   case: "Genative",	gender : "Feminine",	number : "Singular", id : "5" };
+articles[4]  = { word : "ἡ",      case: "Nominative",	gender : "Feminine",	number : "Singular", id : "4" };
+articles[5]  = { word : "τῆς",   case: "Genitive",	gender : "Feminine",	number : "Singular", id : "5" };
 articles[6]  = { word : "τῇ",    case: "Dative",	gender : "Feminine",	number : "Singular", id : "6" };
 articles[7]  = { word : "τήν",  case: "Accusative",	gender : "Feminine",	number : "Singular", id : "7" };
-articles[8]  = { word : "τό",    case: "Nomnative",	gender : "Neuter",	number : "Singular", id : "8" };
-articles[9]  = { word : "τοῦ",  case: "Genative",	gender : "Neuter",	number : "Singular", id : "9" };
+articles[8]  = { word : "τό",    case: "Nominative",	gender : "Neuter",	number : "Singular", id : "8" };
+articles[9]  = { word : "τοῦ",  case: "Genitive",	gender : "Neuter",	number : "Singular", id : "9" };
 articles[10] = { word : "τῷ",    case: "Dative",	gender : "Neuter",	number : "Singular", id : "10" };
 articles[11] = { word : "τό",    case: "Accusative",	gender : "Neuter",	number : "Singular", id : "11" };
-articles[12] = { word : "οἱ",    case: "Nomnative",	gender : "Masculine",	number : "Plural",   id : "12" };
-articles[13] = { word : "τῶν",  case: "Genative",	gender : "Masculine",	number : "Plural",   id : "13" };
+articles[12] = { word : "οἱ",    case: "Nominative",	gender : "Masculine",	number : "Plural",   id : "12" };
+articles[13] = { word : "τῶν",  case: "Genitive",	gender : "Masculine",	number : "Plural",   id : "13" };
 articles[14] = { word : "τοῖς", case: "Dative",	gender : "Masculine",	number : "Plural",   id : "14" };
 articles[15] = { word : "τούς", case: "Accusative",	gender : "Masculine",	number : "Plural",   id : "15" };
-articles[16] = { word : "αἱ",	  case: "Nomnative",	gender : "Feminine",	number : "Plural",   id : "16" };
-articles[17] = { word : "τῶν ", case: "Genative",	gender : "Feminine",	number : "Plural",   id : "17" };
+articles[16] = { word : "αἱ",	  case: "Nominative",	gender : "Feminine",	number : "Plural",   id : "16" };
+articles[17] = { word : "τῶν ", case: "Genitive",	gender : "Feminine",	number : "Plural",   id : "17" };
 articles[18] = { word : "ταῖς", case: "Dative",	gender : "Feminine",	number : "Plural",   id : "18" };
 articles[19] = { word : "τᾱ́ς",   case: "Accusative",	gender : "Feminine",	number : "Plural",   id : "19" };
-articles[20] = { word : "τά",    case: "Nomnative",	gender : "Neuter",	number : "Plural",   id : "20" };
-articles[21] = { word : "τῶν",  case: "Genative",	gender : "Neuter",	number : "Plural",   id : "21" };
+articles[20] = { word : "τά",    case: "Nominative",	gender : "Neuter",	number : "Plural",   id : "20" };
+articles[21] = { word : "τῶν",  case: "Genitive",	gender : "Neuter",	number : "Plural",   id : "21" };
 articles[22] = { word : "τοῖς", case: "Dative",	gender : "Neuter",	number : "Plural",   id : "22" };
 articles[23] = { word : "τά",    case: "Accusative",	gender : "Neuter",	number : "Plural",   id : "23" };
 
@@ -43,7 +43,9 @@ function nextQuestion() {
 }
 
 function getRandomArticle() {
-	index = Math.floor(Math.random() * 24);
+	do {
+		index = Math.floor(Math.random() * 24);
+	} while(isNotAllowableIndex(index));
 
 	return articles[index];
 }
@@ -98,5 +100,18 @@ function answerSelectionAction(answerNumber) {
 		answerButton[answerNumber].style.backgroundColor="red";
 	}
 }
+
+// Check to see whether a given index refers to an article that the user has excluded
+function isNotAllowableIndex(index) {
+	article = articles[index];
+
+	return(isWrongCase(article));
+}
+
+// Return true if article is of a prohibited case
+function isWrongCase(article) {
+	return(!document.getElementById(article.case).checked);
+}
+
 
 window.onload = nextQuestion();
